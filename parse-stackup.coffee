@@ -8,8 +8,16 @@ layers = []
 for filename in process.argv[2..]
     gerberString = fs.readFileSync(filename, 'utf-8')
     layerType    = idLayer(filename)
-    options      = {object: true, drill: (layerType == 'drl')}
-    svgObj       = gerberToSvg(gerberString, options)
-    layers.push({type: layerType, svg: svgObj})
+    if layerType != 'drw' #drw is the default for any un-identifiable extensions
+        try
+            svgObj = gerberToSvg(gerberString, {object: true, drill: (layerType == 'drl')})
+        catch
+            try
+                svgObj = gerberToSvg(gerberString, {object: true, drill: true})
+            catch e
+                console.warn "could not parse #{filename} as #{layerType} because #{e.message}"
+                continue
+            layerType = 'drl'
+        layers.push({type: layerType, svg: svgObj})
 
 stackup = pcbStackup(layers, 'test')
