@@ -1,23 +1,8 @@
-fs           = require('fs')
-boardBuilder = require('svgerber-board-builder')
-pcbStackup   = require('pcb-stackup')
-idLayer      = require('pcb-stackup/lib/layer-types').identify
-gerberToSvg  = require('gerber-to-svg')
+fs                  = require ('fs')
+path                = require('path')
+stackupBoardBuilder = require('./stackupBoardBuilder')
+gerberToSvg         = require('gerber-to-svg')
 
-layers = []
-for filename in process.argv[2..]
-    gerberString = fs.readFileSync(filename, 'utf-8')
-    layerType    = idLayer(filename)
-    if layerType != 'drw' #drw is the default for any un-identifiable extensions
-        try
-            svgObj = gerberToSvg(gerberString, {object: true, drill: (layerType == 'drl')})
-        catch
-            try
-                svgObj = gerberToSvg(gerberString, {object: true, drill: true})
-            catch e
-                console.warn "could not parse #{filename} as #{layerType} because #{e.message}"
-                continue
-            layerType = 'drl'
-        layers.push({type: layerType, svg: svgObj})
+stackup = stackupBoardBuilder(process.argv[3..])
 
-stackup = pcbStackup(layers, 'test')
+fs.writeFileSync("output/#{path.relative('gerbers', process.argv[2])}.svg", gerberToSvg(stackup.top))

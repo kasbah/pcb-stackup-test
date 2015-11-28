@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "stackup": "for dir in gerbers/*; do coffee parse-stackup.coffee $dir/*; done;",
-    "builder": "for dir in gerbers/*; do coffee parse-builder.coffee $dir/*; done;"
+    "stackup": "for dir in gerbers/*; do coffee parse-stackup.coffee $dir $dir/*; done;",
+    "builder": "for dir in gerbers/*; do coffee parse-builder.coffee $dir $dir/*; done;"
   },
   "author": "",
   "license": "MIT",
