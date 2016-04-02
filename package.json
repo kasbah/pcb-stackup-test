@@ -12,7 +12,7 @@
   "devDependencies": {
     "coffee-script": "^1.10.0",
     "gerber-to-svg": "^0.4.2",
-    "pcb-stackup": "0.0.3",
+    "pcb-stackup": "^0.0.4",
     "svgerber-board-builder": "git+https://git@github.com/kasbah/svgerber-board-builder.git"
   }
 }
